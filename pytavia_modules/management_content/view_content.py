@@ -67,124 +67,141 @@ class view_content:
             )             
             ALL_DATA     = list( manage_content_view )
         elif content == 'LIST_LIVE_CONTENT':
-            launcher_content = 'list_live_content.html'
-            manage_content_view     = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_content": 'live'
-                }
-            )   
-            ALL_DATA     = list( manage_content_view )
+            if session.get('role') == 'redaksi':
+                launcher_content = 'list_live_content.html'
+                manage_content_view     = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_content": 'live'
+                    }
+                )   
+                ALL_DATA     = list( manage_content_view )
+            else:
+                return 'anda tidak memiliki akses'
         elif content == 'LIST_END_CONTENT':
-            launcher_content = 'list_end_content.html'            
-            manage_content_view     = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_content": 'expired'
-                }
-            ) 
-            ALL_DATA     = list( manage_content_view )
+            if session.get('role') == 'redaksi':
+                launcher_content = 'list_end_content.html'            
+                manage_content_view     = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_content": 'expired'
+                    }
+                ) 
+                ALL_DATA     = list( manage_content_view )
+            else:
+                return 'anda tidak memiliki akses'
         elif content == 'WRITE_CONTENT':
-            launcher_content = 'write_content.html'            
-            manage_content_view_jurnalist     = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_publish": 'jurnalist'
-                }
-            ) 
-            ALL_DATA_JURNALIST    = list( manage_content_view_jurnalist )
+            if session.get('role') == 'jurnalist':
+                launcher_content = 'write_content.html'            
+                manage_content_view_jurnalist     = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_publish": 'jurnalist'
+                    }
+                ) 
+                ALL_DATA_JURNALIST    = list( manage_content_view_jurnalist )
 
-            manage_content_view_editor    = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_publish": 'editor'
-                }
-            ) 
-            ALL_DATA_EDITOR     = list( manage_content_view_editor )
+                manage_content_view_editor    = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_publish": {"$not":{"$regex":"jurnalist"}},
+                        # "status_publish": 'editor'
+                    }
+                ) 
+                ALL_DATA_EDITOR     = list( manage_content_view_editor )
 
-            response = render_template(
-                launcher_content,
-                ALL_DATA_JURNALIST = ALL_DATA_JURNALIST,
-                ALL_DATA_EDITOR    = ALL_DATA_EDITOR
-            )
+                response = render_template(
+                    launcher_content,
+                    ALL_DATA_JURNALIST = ALL_DATA_JURNALIST,
+                    ALL_DATA_EDITOR    = ALL_DATA_EDITOR
+                )
 
-            return response
+                return response
+            else:
+                return 'anda tidak memiliki akses'
         elif content == 'EDITOR_PAGE':
-            launcher_content = 'editor_page.html'  
-            manage_content_view_editor   = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "$and"     : [{"status_publish": 'editor'},
-                        {"status_content" :{"$not":{"$regex":'redaction'}}},
-                        {"status_content" :{"$not":{"$regex":'rejected'}}},]
-                }
-            ) 
-            ALL_DATA_JURNALIST  = list( manage_content_view_editor)
-          
-            manage_content_view_accept    = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_publish": 'redaction'
-                }
-            ) 
-            ALL_DATA_JURNALIST_ACCEPT  = list( manage_content_view_accept )
+            if session.get('role') == 'editor':
+                launcher_content = 'editor_page.html'  
+                manage_content_view_editor   = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "$and"     : [{"status_publish": 'editor'},
+                            {"status_content" :{"$not":{"$regex":'redaction'}}},
+                            {"status_content" :{"$not":{"$regex":'rejected'}}},]
+                    }
+                ) 
+                ALL_DATA_JURNALIST  = list( manage_content_view_editor)
+            
+                manage_content_view_accept    = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_publish": 'redaction'
+                    }
+                ) 
+                ALL_DATA_JURNALIST_ACCEPT  = list( manage_content_view_accept )
 
-            manage_content_view_rejected    = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_publish": 'jurnalist',
-                    "status_content": 'rejected'
-                }
-            ) 
-            ALL_DATA_JURNALIST_REJECTED     = list( manage_content_view_rejected )
+                manage_content_view_rejected    = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_publish": 'jurnalist',
+                        "status_content": 'rejected'
+                    }
+                ) 
+                ALL_DATA_JURNALIST_REJECTED     = list( manage_content_view_rejected )
 
-            response = render_template(
-                launcher_content,
-                ALL_DATA_JURNALIST = ALL_DATA_JURNALIST,                
-                ALL_DATA_JURNALIST_ACCEPT = ALL_DATA_JURNALIST_ACCEPT,
-                ALL_DATA_JURNALIST_REJECTED   = ALL_DATA_JURNALIST_REJECTED
-            )
+                response = render_template(
+                    launcher_content,
+                    ALL_DATA_JURNALIST = ALL_DATA_JURNALIST,                
+                    ALL_DATA_JURNALIST_ACCEPT = ALL_DATA_JURNALIST_ACCEPT,
+                    ALL_DATA_JURNALIST_REJECTED   = ALL_DATA_JURNALIST_REJECTED
+                )
 
-            return response
+                return response
+            else:
+                return 'anda tidak memiliki akses'
         elif content == 'REDACTION_PAGE':
-            launcher_content = 'redaction_page.html'  
-            manage_content_view_editor   = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "$and"     : [{"status_publish": 'redaction'},                        
-                        {"status_content" :{"$not":{"$regex":'rejected'}}}]
-                }
-            ) 
-            ALL_DATA_EDITOR  = list( manage_content_view_editor)            
-          
-            manage_content_view_accept    = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_publish": 'accept',
-                }
-            ) 
-            ALL_DATA_EDITOR_ACCEPT  = list( manage_content_view_accept )
+            if session.get('role') == 'redaksi':
+                launcher_content = 'redaction_page.html'  
+                manage_content_view_editor   = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "$and"     : [{"status_publish": 'redaction'},                        
+                            {"status_content" :{"$not":{"$regex":'rejected'}}}]
+                    }
+                ) 
+                ALL_DATA_EDITOR  = list( manage_content_view_editor)            
+            
+                manage_content_view_accept    = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_publish": 'accept',
+                    }
+                ) 
+                ALL_DATA_EDITOR_ACCEPT  = list( manage_content_view_accept )
 
-            manage_content_view_rejected    = self.mgdDB.db_content_management.find(
-                {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
-                    "status_publish": 'rejected',
-                    "status_content": 'rejected'
-                }
-            ) 
-            ALL_DATA_EDITOR_REJECTED     = list( manage_content_view_rejected )
+                manage_content_view_rejected    = self.mgdDB.db_content_management.find(
+                    {
+                        "status": {"$not":{"$regex":"DEACTIVE"}},
+                        "status_publish": 'rejected',
+                        "status_content": 'rejected'
+                    }
+                ) 
+                ALL_DATA_EDITOR_REJECTED     = list( manage_content_view_rejected )
 
-            response = render_template(
-                launcher_content,
-                ALL_DATA_EDITOR = ALL_DATA_EDITOR,                
-                ALL_DATA_EDITOR_ACCEPT = ALL_DATA_EDITOR_ACCEPT,
-                ALL_DATA_EDITOR_REJECTED   = ALL_DATA_EDITOR_REJECTED
-            )
+                response = render_template(
+                    launcher_content,
+                    ALL_DATA_EDITOR = ALL_DATA_EDITOR,                
+                    ALL_DATA_EDITOR_ACCEPT = ALL_DATA_EDITOR_ACCEPT,
+                    ALL_DATA_EDITOR_REJECTED   = ALL_DATA_EDITOR_REJECTED
+                )
 
-            return response        
+                return response     
+            else:
+                return 'anda tidak memiliki akses'   
         else:
-            launcher_content = 'view_content.html'
-            ALL_DATA = session.get('role')
+            # launcher_content = 'view_content.html'
+            # ALL_DATA = session.get('role')
+            return 'halaman tidak ditemukan'
         
         response = render_template(
             launcher_content,

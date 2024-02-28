@@ -23,6 +23,7 @@ sys.path.append("pytavia_modules")
 from flask             import render_template_string
 from flask             import render_template
 from flask             import request
+from flask             import session
 
 from pytavia_stdlib    import idgen
 from pytavia_stdlib    import utils
@@ -68,10 +69,17 @@ class update_write_content:
                                     "end_date" : end_date}             
                 } 
             ) 
-        
+                
+        if  session.get('role') == 'jurnalist':
+            role_page = 'WRITE_CONTENT'
+        elif session.get('role') == 'editor':
+            role_page = 'EDITOR_PAGE'
+        else:
+            role_page = 'REDACTION_PAGE'
+            
         response = {
-            'menu_value' : 'WRITE_CONTENT'
-        }
+            'menu_value' : role_page            
+        } 
         
         return response    
     # end def

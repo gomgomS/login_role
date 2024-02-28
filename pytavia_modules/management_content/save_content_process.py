@@ -48,7 +48,7 @@ class save_content_process:
         self.webapp = app        
     # end def
 
-    def process(self, params):        
+    def process(self, params):    
         response = helper.response_msg(
             "CREATE_COMPANY_SUCCESS",
             "CREATE COMPANY SUCCESS", {},

@@ -74,10 +74,17 @@ class login_app:
             if bcrypt.hashpw(data['pass'].encode('utf-8'),login_user['password']) == login_user['password']:
                 
                 session['username'] = data['emailorusername']
-                session['role'] = login_user['role'] 
+                session['role'] = login_user['role']
 
+                if login_user['role']=='jurnalist':
+                    role_page = 'WRITE_CONTENT'
+                elif login_user['role']=='editor':
+                    role_page = 'EDITOR_PAGE'
+                else:
+                    role_page = 'REDACTION_PAGE'
+                    
                 response = {
-                    'menu_value' : 'MANAGE_CONTENT'            
+                    'menu_value' : role_page            
                 } 
             else:                                              
                 response = {

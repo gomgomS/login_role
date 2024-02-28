@@ -21,6 +21,7 @@
       news publish on {{data['start_date']}}
     </div>
     <div class="card-body">
+      <img src="{{url_for('static',filename = 'upload/'+data['file_photo'])}}" height="100" >
       <h5 class="card-title"> {{data['title']}}</h5>
       <p class="card-text" > {{data['content']}}</p>
     </div>

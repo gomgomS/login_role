@@ -14,13 +14,7 @@
                     
                        <!-- <li class="list-group-item py-1">
                         <a href="launcher?menu_value=MANAGE_CONTENT" class="text-reset">PENGELOLAAN CONTENT</a>
-                    </li>
-                    <li class="list-group-item py-1">
-                        <a href="launcher?menu_value=LIST_LIVE_CONTENT" class="text-reset">LIST ARTIKEL TAYANG</a>
-                    </li>
-                    <li class="list-group-item py-1">
-                        <a href="launcher?menu_value=LIST_END_CONTENT" class="text-reset">LIST ARTIKEL BERHENTI TAYANG</a>
-                    </li> -->
+                    </li>-->
                     {%if ROLE == 'jurnalist'%}
                     <li class="list-group-item py-1">
                         <a href="launcher?menu_value=WRITE_CONTENT" class="text-reset">LIST JURNALIST</a>
@@ -34,6 +28,12 @@
                     {%if ROLE == 'redaksi'%}
                     <li class="list-group-item py-1">
                         <a href="launcher?menu_value=REDACTION_PAGE" class="text-reset">LIST REDACTION</a>
+                    </li>
+                    <li class="list-group-item py-1">
+                        <a href="launcher?menu_value=LIST_LIVE_CONTENT" class="text-reset">LIST ARTIKEL TAYANG</a>
+                    </li>
+                    <li class="list-group-item py-1">
+                        <a href="launcher?menu_value=LIST_END_CONTENT" class="text-reset">LIST ARTIKEL BERHENTI TAYANG</a>
                     </li>
                     {%endif%}
 

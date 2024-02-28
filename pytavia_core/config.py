@@ -20,10 +20,10 @@ G_HOME_PATH=os.getcwd()
 
 # This is where all the cookies are stored
 G_SESSION_STORAGE           = G_HOME_PATH + "/settings/storage"
-G_STATIC_URL_PATH           = G_HOME_PATH + "/static"
-# G_STATIC_URL_PATH           = "/static"
+G_STATIC_URL_PATH_gomgom    = G_HOME_PATH + "/static"
+G_STATIC_URL_PATH           = "/static"
 G_UPLOAD_PATH               = G_HOME_PATH + G_STATIC_URL_PATH + "/upload"
-G_UPLOAD_URL_PATH           = G_STATIC_URL_PATH + "/upload"
+G_UPLOAD_URL_PATH           = G_STATIC_URL_PATH_gomgom + "/upload"
 G_STATIC_STARTUP_PATH       = G_HOME_PATH + "/pytavia_startup"
 
 G_FLASK_ENV                 = os.getenv('FLASK_ENV') or "development"
